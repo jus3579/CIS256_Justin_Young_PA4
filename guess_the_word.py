@@ -7,15 +7,16 @@ import random
 
 class Game:
     WORDLIST = [
-        "apple", "banana", "cherry", "dragonfruit", "elderberry", "fig", "grape", "honeydew"
+        "apple", "banana", "cherry", "dragonfruit", "elderberry", "fig",
+        "grape", "honeydew"
     ]
 
     def __init__(self):
         self.word = random.choice(self.WORDLIST)
-        self.guessed_word = ['_' for i in range (len(self.word))]
+        self.guessed_word = ['_' for i in range(len(self.word))]
         self.word.split()
-        self.total_attempts = 0
-        self.max_attempts = len(self.word)
+        self.total_incorrect_guesses = 0
+        self.max_incorrect_guesses = len(self.word)
         self.guessed_letters = set()
 
     def guess_letter(self, guessed_letter):
@@ -30,13 +31,11 @@ class Game:
         if letter_was_present == False:
             if guessed_letter not in self.guessed_letters:
                 self.guessed_letters.add(guessed_letter)
-                self.total_attempts += 1
+                self.total_incorrect_guesses += 1
         return letter_was_present
 
-
     def attempts_remaining(self):
-        return self.max_attempts - self.total_attempts
-
+        return self.max_incorrect_guesses - self.total_incorrect_guesses
 
     def is_game_over(self):
         if self.attempts_remaining() <= 0:
@@ -46,6 +45,7 @@ class Game:
             return True
 
         return False
+
 
 def main():
     game = Game()
