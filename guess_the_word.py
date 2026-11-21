@@ -4,36 +4,42 @@
 
 import random
 
-wordlist = [
-       "giraffe", "elephant", "dumpster", "building", "racetrack", "table", "pig", "dig", "throw", "flag", "python", "snake", "apple", "fruit", "flight"
-        ]
+wordlist = ["apple", "banana", "cherry", "dragonfruit", "elderberry", "fig", "grape", "honeydew"]
 
 word = random.choice(wordlist)
 guessed_word = ['_' for i in range (0, len(word))]
 word.split()
-guessed_letters = []
-
+total_attempts = 0
 game_over = False
-
-print(f"word: {word}")
+max_attempts = len(word)
 
 def guess_letter(guessed_letter):
-    letter_was_present = False
     guessed_letter = guessed_letter.lower()
+    letter_was_present = False
     i = 0
     for letter in word:
-        print(f"  letter: {letter}")
-        print(f"  guessed_letter: {guessed_letter}")
         if letter == guessed_letter:
             guessed_word[i] = guessed_letter
             letter_was_present = True
         i += 1
+    if letter_was_present == False:
+        total_attempts += 1
     return letter_was_present
 
-while game_over is False:
+def attempts_remaining():
+    return max_attempts - total_attempts
+
+def is_game_over():
+    if attempts_remaining() <= 0:
+        return True
+    else:
+        return False
+
+while is_game_over() is False:
     user_input = input("Guess a letter: ")
     result = guess_letter(user_input)
     if result == True:
-        print(f"PRESENT {guessed_word}")
+        print(f"Good guess!")
     else:
-        print("NOT PRESENT")
+        print(f"Try again. {attempts_remaining()} guesses left")
+    print("".join(guessed_word))
