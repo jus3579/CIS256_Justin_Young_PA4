@@ -4,42 +4,62 @@
 
 import random
 
-wordlist = ["apple", "banana", "cherry", "dragonfruit", "elderberry", "fig", "grape", "honeydew"]
 
-word = random.choice(wordlist)
-guessed_word = ['_' for i in range (0, len(word))]
-word.split()
-total_attempts = 0
-game_over = False
-max_attempts = len(word)
+class Game:
+    WORDLIST = [
+        "apple", "banana", "cherry", "dragonfruit", "elderberry", "fig", "grape", "honeydew"
+    ]
 
-def guess_letter(guessed_letter):
-    guessed_letter = guessed_letter.lower()
-    letter_was_present = False
-    i = 0
-    for letter in word:
-        if letter == guessed_letter:
-            guessed_word[i] = guessed_letter
-            letter_was_present = True
-        i += 1
-    if letter_was_present == False:
-        total_attempts += 1
-    return letter_was_present
+    def __init__(self):
+        self.word = random.choice(self.WORDLIST)
+        self.guessed_word = ['_' for i in range (len(self.word))]
+        self.word.split()
+        self.total_attempts = 0
+        self.max_attempts = len(self.word)
+        self.guessed_letters = set()
 
-def attempts_remaining():
-    return max_attempts - total_attempts
+    def guess_letter(self, guessed_letter):
+        guessed_letter = guessed_letter.lower()
+        letter_was_present = False
+        i = 0
+        for letter in self.word:
+            if letter == guessed_letter:
+                self.guessed_word[i] = guessed_letter
+                letter_was_present = True
+            i += 1
+        if letter_was_present == False:
+            if guessed_letter not in self.guessed_letters:
+                self.guessed_letters.add(guessed_letter)
+                self.total_attempts += 1
+        return letter_was_present
 
-def is_game_over():
-    if attempts_remaining() <= 0:
-        return True
-    else:
+
+    def attempts_remaining(self):
+        return self.max_attempts - self.total_attempts
+
+
+    def is_game_over(self):
+        if self.attempts_remaining() <= 0:
+            return True
+
+        if "".join(self.guessed_word) == self.word:
+            return True
+
         return False
 
-while is_game_over() is False:
-    user_input = input("Guess a letter: ")
-    result = guess_letter(user_input)
-    if result == True:
-        print(f"Good guess!")
-    else:
-        print(f"Try again. {attempts_remaining()} guesses left")
-    print("".join(guessed_word))
+def main():
+    game = Game()
+    while game.is_game_over() is False:
+        user_input = input("Guess a letter: ")
+        result = game.guess_letter(user_input)
+        if result == True:
+            print("Good guess!")
+        else:
+            print(f"Try again. {game.attempts_remaining()} incorrect guesses left")
+        print("".join(game.guessed_word) + "\n")
+        if game.is_game_over():
+            print(f"The word was: {game.word}")
+
+
+if __name__ == "__main__":
+    main()
